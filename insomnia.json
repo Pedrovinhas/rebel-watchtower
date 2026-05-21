@@ -1,0 +1,231 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-05-20T00:00:00.000Z",
+  "__export_source": "Pedro Henrique Vinhas",
+  "resources": [
+    {
+      "_id": "wrk_api_monitoring",
+      "_type": "workspace",
+      "name": "API Monitoring",
+      "description": ""
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_api_monitoring",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+
+    {
+      "_id": "fld_health",
+      "_type": "request_group",
+      "parentId": "wrk_api_monitoring",
+      "name": "Health"
+    },
+    {
+      "_id": "req_health",
+      "_type": "request",
+      "parentId": "fld_health",
+      "name": "GET /health",
+      "method": "GET",
+      "url": "{{ baseUrl }}/health"
+    },
+
+    {
+      "_id": "fld_entities",
+      "_type": "request_group",
+      "parentId": "wrk_api_monitoring",
+      "name": "Entities"
+    },
+    {
+      "_id": "req_create_entity",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Create Entity",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/entities",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Millennium Falcon\"\n}"
+      }
+    },
+    {
+      "_id": "req_create_entity_invalid",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Create Entity (Invalid)",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/entities",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"\"\n}"
+      }
+    },
+    {
+      "_id": "req_list_entities",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "List Entities",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities"
+    },
+    {
+      "_id": "req_entities_pagination",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Entities Pagination",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities?page=1&limit=5"
+    },
+    {
+      "_id": "req_entities_active",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Entities Active",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities?status=active"
+    },
+    {
+      "_id": "req_entities_suspended",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Entities Suspended",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities?status=suspended"
+    },
+    {
+      "_id": "req_entities_search",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Entities Search",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities?search=falcon"
+    },
+    {
+      "_id": "req_entities_combined",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Entities Combined Filters",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities?page=1&limit=10&status=active&search=falcon"
+    },
+    {
+      "_id": "req_entities_ranking",
+      "_type": "request",
+      "parentId": "fld_entities",
+      "name": "Entities Ranking",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/entities/ranking"
+    },
+
+    {
+      "_id": "fld_events",
+      "_type": "request_group",
+      "parentId": "wrk_api_monitoring",
+      "name": "Events"
+    },
+    {
+      "_id": "req_event_info",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Event Info",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"entity_id\": 1,\n  \"external_id\": \"evt-001\",\n  \"severity\": \"info\",\n  \"payload\": { \"message\": \"Sistema iniciado\" }\n}"
+      }
+    },
+    {
+      "_id": "req_event_warning",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Event Warning",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"entity_id\": 1,\n  \"external_id\": \"evt-002\",\n  \"severity\": \"warning\",\n  \"payload\": { \"cpu\": 87, \"threshold\": 80 }\n}"
+      }
+    },
+    {
+      "_id": "req_event_critical",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Event Critical",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"entity_id\": 1,\n  \"external_id\": \"evt-003\",\n  \"severity\": \"critical\",\n  \"payload\": { \"reason\": \"Falha no hiperdrive\" }\n}"
+      }
+    },
+    {
+      "_id": "req_event_idempotent",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Event Idempotent",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"entity_id\": 1,\n  \"external_id\": \"evt-001\",\n  \"severity\": \"info\",\n  \"payload\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_event_invalid_severity",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Invalid Severity",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"entity_id\": 1,\n  \"external_id\": \"evt-004\",\n  \"severity\": \"ultra-critical\",\n  \"payload\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_event_missing_entity",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Missing Entity",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"external_id\": \"evt-005\",\n  \"severity\": \"info\"\n}"
+      }
+    },
+    {
+      "_id": "req_event_not_found",
+      "_type": "request",
+      "parentId": "fld_events",
+      "name": "Entity Not Found",
+      "method": "POST",
+      "url": "{{ baseUrl }}/api/events",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"entity_id\": 99999,\n  \"external_id\": \"evt-ghost\",\n  \"severity\": \"info\",\n  \"payload\": {}\n}"
+      }
+    },
+
+    {
+      "_id": "fld_sse",
+      "_type": "request_group",
+      "parentId": "wrk_api_monitoring",
+      "name": "SSE"
+    },
+    {
+      "_id": "req_sse",
+      "_type": "request",
+      "parentId": "fld_sse",
+      "name": "Events Stream",
+      "method": "GET",
+      "url": "{{ baseUrl }}/api/events/stream"
+    }
+  ]
+}
