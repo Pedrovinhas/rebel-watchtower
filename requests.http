@@ -1,0 +1,158 @@
+@baseUrl = http://localhost:3000
+
+### Health
+
+GET {{baseUrl}}/health
+
+
+### Entities
+
+# Criar entidade
+POST {{baseUrl}}/api/entities
+Content-Type: application/json
+
+{
+  "name": "Millennium Falcon"
+}
+
+###
+
+# Criar entidade — validação: nome vazio (espera 400)
+POST {{baseUrl}}/api/entities
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+###
+
+# Listar entidades (padrão: page=1, limit=20)
+GET {{baseUrl}}/api/entities
+
+###
+
+# Listar entidades — com paginação
+GET {{baseUrl}}/api/entities?page=1&limit=5
+
+###
+
+# Listar entidades — filtrar por status
+GET {{baseUrl}}/api/entities?status=active
+
+###
+
+# Listar entidades — filtrar por status suspenso
+GET {{baseUrl}}/api/entities?status=suspended
+
+###
+
+# Listar entidades — busca por nome
+GET {{baseUrl}}/api/entities?search=falcon
+
+###
+
+# Listar entidades — combinar filtros
+GET {{baseUrl}}/api/entities?page=1&limit=10&status=active&search=falcon
+
+###
+
+# Ranking de criticidade (top 10)
+GET {{baseUrl}}/api/entities/ranking
+
+
+### Events
+
+# Registrar evento — severity info
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "entity_id": 1,
+  "external_id": "evt-001",
+  "severity": "info",
+  "payload": { "message": "Sistema iniciado" }
+}
+
+###
+
+# Registrar evento — severity warning
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "entity_id": 1,
+  "external_id": "evt-002",
+  "severity": "warning",
+  "payload": { "cpu": 87, "threshold": 80 }
+}
+
+###
+
+# Registrar evento — severity critical
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "entity_id": 1,
+  "external_id": "evt-003",
+  "severity": "critical",
+  "payload": { "reason": "Falha no hiperdrive" }
+}
+
+###
+
+# Registrar evento — idempotência (mesmo external_id, espera 200 + idempotent: true)
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "entity_id": 1,
+  "external_id": "evt-001",
+  "severity": "info",
+  "payload": {}
+}
+
+###
+
+# Registrar evento — validação: severity inválido (espera 400)
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "entity_id": 1,
+  "external_id": "evt-004",
+  "severity": "ultra-critical",
+  "payload": {}
+}
+
+###
+
+# Registrar evento — validação: entity_id ausente (espera 400)
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "external_id": "evt-005",
+  "severity": "info"
+}
+
+###
+
+# Registrar evento — entity inexistente (espera 404)
+POST {{baseUrl}}/api/events
+Content-Type: application/json
+
+{
+  "entity_id": 99999,
+  "external_id": "evt-ghost",
+  "severity": "info",
+  "payload": {}
+}
+
+
+### SSE — colar no browser ou usar curl
+
+# GET {{baseUrl}}/api/events/stream
+# (REST Clients normalmente não suportam SSE — use o browser ou:)
+# curl -N http://localhost:3000/api/events/stream
