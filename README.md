@@ -11,7 +11,7 @@ Para decisões de arquitetura e técnicas, veja [docs/adrs.md](docs/adrs.md).
 ### Pré-requisitos
 
 - Docker + Docker Compose
-- Make (opcional — veja os comandos Docker abaixo caso não esteja disponível)
+- Make (opcional - veja os comandos Docker abaixo caso não esteja disponível)
 
 ### Com Make
 
