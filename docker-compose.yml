@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:17-alpine3.21
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: holocron
+      POSTGRES_USER: rebel
+      POSTGRES_PASSWORD: force123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./api/db/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rebel -d holocron"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./api
+      target: runner
+    restart: unless-stopped
+    env_file: ./api/.env
+    environment:
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      target: runner
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:3000
+    restart: unless-stopped
+    env_file: ./frontend/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:

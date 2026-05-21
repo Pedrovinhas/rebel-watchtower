@@ -1,0 +1,19 @@
+services:
+  api:
+    build:
+      context: ./api
+      target: dev
+    restart: "no"
+    env_file: ./api/.env
+    volumes:
+      - ./api/src:/app/src
+      - ./logs:/app/logs
+
+  frontend:
+    build:
+      context: ./frontend
+      target: dev
+    restart: "no"
+    env_file: ./frontend/.env
+    volumes:
+      - ./frontend/src:/app/src
