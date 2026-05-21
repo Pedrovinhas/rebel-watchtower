@@ -1,4 +1,4 @@
-# Holocron Sentinel
+# Rebel Watchtower
 
 Sistema fullstack de monitoramento para rastreamento de entidades e eventos em tempo real cnstruído com Node.js 24 + Fastify + PostgreSQL 17 + Next.js 16, containerizado com Docker.
 
