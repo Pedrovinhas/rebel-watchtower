@@ -6,6 +6,7 @@ import { useEventForm } from '../hooks/useEventForm';
 import { getEntities } from '@/features/entities/api/entities.api';
 import type { Entity } from '@/features/entities/model/types';
 import clsx from 'clsx';
+import { Button } from '@/shared/ui/Button';
 
 interface EventFormProps {
   onSuccess?: () => void;
@@ -151,13 +152,9 @@ export function EventForm({ onSuccess }: EventFormProps = {}) {
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={status === 'loading'}
-        className="px-6 py-2 bg-primary text-on-primary text-sm font-bold uppercase tracking-wide hover:bg-yellow-400 disabled:opacity-50 transition-colors"
-      >
+      <Button type="submit" disabled={status === 'loading'}>
         {status === 'loading' ? 'Submitting…' : 'Submit Event'}
-      </button>
+      </Button>
     </form>
   );
 }

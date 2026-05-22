@@ -1,14 +1,9 @@
 'use client';
 
-import clsx from 'clsx';
 import { useSSE } from '../hooks/useSSE';
 import type { Event } from '../model/types';
-
-const TYPE_STYLES: Record<Event['type'], string> = {
-  info: 'border border-blue-500 text-blue-400',
-  warning: 'border border-yellow-500 text-yellow-400',
-  critical: 'border border-error text-error',
-};
+import { Badge } from '@/shared/ui/Badge';
+import { EmptyState } from '@/shared/ui/EmptyState';
 
 const SSE_URL = `${process.env.NEXT_PUBLIC_API_URL ?? ''}/api/events/stream`;
 
@@ -21,30 +16,13 @@ export function EventFeed() {
         <h2 className="text-lg font-bold text-on-surface uppercase tracking-widest">
           Live Event Feed
         </h2>
-        <span
-          className={clsx(
-            'inline-flex items-center gap-1.5 px-2 py-0.5 text-xs uppercase border',
-            connected
-              ? 'border-primary text-primary'
-              : 'border-on-surface-variant text-on-surface-variant',
-          )}
-        >
-          <span
-            className={clsx(
-              'w-1.5 h-1.5 rounded-full',
-              connected ? 'bg-primary animate-pulse' : 'bg-on-surface-variant',
-            )}
-          />
+        <Badge variant={connected ? 'active' : 'default'} dot pulse={connected}>
           {connected ? 'Live' : 'Reconnecting…'}
-        </span>
+        </Badge>
       </div>
 
       <div className="flex-1 overflow-y-auto space-y-2 pr-1">
-        {events.length === 0 && (
-          <p className="text-sm text-on-surface-variant py-8 text-center">
-            Waiting for events…
-          </p>
-        )}
+        {events.length === 0 && <EmptyState message="Waiting for events…" />}
         {events.map((event) => (
           <EventCard key={`${event.id}-${event.created_at}`} event={event} />
         ))}
@@ -56,14 +34,9 @@ export function EventFeed() {
 function EventCard({ event }: { event: Event }) {
   return (
     <div className="bg-surface-container border border-outline-variant p-3 flex items-start gap-3">
-      <span
-        className={clsx(
-          'flex-shrink-0 text-xs px-1.5 py-0.5 uppercase font-semibold',
-          TYPE_STYLES[event.type],
-        )}
-      >
+      <Badge variant={event.type} className="flex-shrink-0 px-1.5 py-0.5 font-semibold">
         {event.type}
-      </span>
+      </Badge>
       <div className="flex-1 min-w-0">
         <p className="text-xs text-on-surface-variant">
           {event.entity_name

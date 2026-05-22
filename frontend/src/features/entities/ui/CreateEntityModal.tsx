@@ -6,6 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { createEntity } from '../api/entities.api';
 import { createEntitySchema, type CreateEntityInput } from '../model/schemas';
 import { HttpError } from '@/shared/lib/http';
+import { Button } from '@/shared/ui/Button';
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 
 interface Props {
   onCreated: () => void;
@@ -79,27 +81,15 @@ export function CreateEntityModal({ onCreated, onClose }: Props) {
             )}
           </label>
 
-          {serverError && (
-            <p className="mb-4 text-sm text-error border border-error/40 bg-error-container/20 px-3 py-2">
-              {serverError}
-            </p>
-          )}
+          <ErrorMessage message={serverError} className="mb-4" />
 
           <div className="flex gap-3 justify-end pt-2">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 text-sm text-on-surface-variant border border-outline-variant hover:border-outline hover:text-on-surface transition-colors uppercase tracking-wide"
-            >
+            <Button type="button" variant="ghost" onClick={onClose}>
               Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="px-4 py-2 text-sm bg-primary text-on-primary font-bold uppercase tracking-wide hover:bg-yellow-400 disabled:opacity-50 transition-colors"
-            >
+            </Button>
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? 'Registering…' : 'Register'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

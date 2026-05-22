@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import type { Entity } from '../model/types';
 import { useConfig } from '@/shared/hooks/useConfig';
+import { Badge } from '@/shared/ui/Badge';
 
 interface Props {
   entities: Entity[];
@@ -78,21 +79,8 @@ export function EntityTable({ entities }: Props) {
 
 export function EntityStatusBadge({ status }: { status: 'active' | 'suspended' }) {
   return (
-    <span
-      className={clsx(
-        'inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium uppercase tracking-wide',
-        status === 'active'
-          ? 'text-primary border border-primary'
-          : 'text-error border border-error bg-error-container/20',
-      )}
-    >
-      <span
-        className={clsx(
-          'w-1.5 h-1.5 rounded-full',
-          status === 'active' ? 'bg-primary' : 'bg-error',
-        )}
-      />
+    <Badge variant={status} dot>
       {status}
-    </span>
+    </Badge>
   );
 }

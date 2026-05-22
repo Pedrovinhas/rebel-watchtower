@@ -1,32 +1,19 @@
 'use client';
 
 import { useRanking } from '../hooks/useRanking';
+import { Spinner } from '@/shared/ui/Spinner';
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
+import { EmptyState } from '@/shared/ui/EmptyState';
 
 export function RankingList() {
   const { data, loading, error } = useRanking();
 
-  if (loading) {
-    return (
-      <div className="flex items-center gap-2 text-on-surface-variant py-8 justify-center">
-        <span className="text-sm">Loading ranking…</span>
-      </div>
-    );
-  }
+  if (loading) return <Spinner label="Loading ranking…" />;
 
-  if (error) {
-    return (
-      <p className="text-sm text-error border border-error/40 bg-error-container/20 px-3 py-2">
-        {error}
-      </p>
-    );
-  }
+  if (error) return <ErrorMessage message={error} />;
 
   if (data.length === 0) {
-    return (
-      <p className="text-sm text-on-surface-variant py-8 text-center">
-        No critical events recorded in the last 7 days.
-      </p>
-    );
+    return <EmptyState message="No critical events recorded in the last 7 days." />;
   }
 
   return (
